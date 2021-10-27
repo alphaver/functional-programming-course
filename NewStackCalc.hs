@@ -121,6 +121,7 @@ jumper n (cst, pcs@(p:ps), rcs@(r:rs))
 
 tryDecodeJump :: Decoder a
 tryDecodeJump ('J':'M':'P':'(':ss) = fmap jumper (intToParenthesisHelper 0 ss)
+tryDecodeJump _ = Nothing
 
 intStackCalcDecoders :: [Decoder Int]
 intStackCalcDecoders = [
