@@ -55,7 +55,7 @@ usage = "Usage: huffman [-d] INFILE OUTFILE\n" ++
 
 parseArgs :: [String] -> IO (String, String, Bool)
 parseArgs (flag:dec:enc:[]) = 
-    if flag == "-d" then pure (dec, enc, True) else error usage
+    if flag == "-d" then pure (dec, enc, True) else errorWithoutStackTrace usage
 parseArgs (enc:dec:[])      = pure (enc, dec, False)
 parseArgs _                 = errorWithoutStackTrace usage 
 
