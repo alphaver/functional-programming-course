@@ -41,7 +41,7 @@ encodeHeader = encodeHeaderH 0 []
 
 decodeHeaderH :: Word8 -> M.Map Word8 Int -> [Word8] -> ([Word8], M.Map Word8 Int)
 decodeHeaderH i m l = if i == 255 then (l', m') else decodeHeaderH (i+1) m' l'
-    where m' = if n' == 0 then m else M.insert i n' m
+    where m' = M.insert i n' m
           n' = fromBitsI $ take (finiteBitSize (0 :: Int)) l
           l' = drop (finiteBitSize (0 :: Int)) l
 
@@ -71,7 +71,7 @@ encodeFile root hFile = do
 encode :: String -> String -> IO ()
 encode inFile outFile = do
     histogram <- withBinaryFile inFile ReadMode readHistogram
-    let hTree = Huf.huffmanTree histogram 
+    let hTree = Huf.huffmanTree $ foldr (\i m -> M.insertWith (+) i 0 m) histogram [0..255]
     fileCode <- withBinaryFile inFile ReadMode (encodeFile hTree)
     let hCode = (encodeHeader histogram) ++ 
                 (toBitsI $ length fileCode) ++
